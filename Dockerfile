@@ -6,4 +6,4 @@ COPY ./package.json ./
 RUN npm install
 COPY ./ ./
 
-CMD ["node", "app.js", "Sao Paulo"]
+CMD ["node", "app.js", "Berlin"]
