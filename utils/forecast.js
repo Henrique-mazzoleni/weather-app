@@ -1,20 +1,25 @@
 const request = require("request");
 require("dotenv").config();
 
-function forecast(longitude, latitude, callback) {
+function forecast({ longitude, latitude }, callback) {
   const url = `http://api.weatherstack.com/current?access_key=${process.env.WEATHER_API_KEY}&query=${latitude},${longitude}`;
 
-  request({ url: url, json: true }, (error, response) => {
+  request({ url, json: true }, (error, { body }) => {
+    const { error: returnError } = body;
+    const {
+      weather_descriptions: forecast,
+      temperature,
+      feelslike: feelsLike,
+    } = body.current;
     if (error) {
       callback("Unable to connect to weather service", undefined);
-    } else if (response.body.error) {
+    } else if (returnError) {
       callback("Weather API unable to find location", undefined);
     } else {
-      const search_result = response.body.current;
       callback(undefined, {
-        forecast: search_result.weather_descriptions[0],
-        temperature: search_result.temperature,
-        feelsLike: search_result.feelslike,
+        forecast: forecast[0],
+        temperature,
+        feelsLike,
       });
     }
   });

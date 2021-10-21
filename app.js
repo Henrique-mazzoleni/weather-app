@@ -4,11 +4,11 @@ const geocode = require("./utils/geocode");
 if (process.argv[2]) {
   geocode(process.argv[2], (error, data) => {
     if (error) return console.log(error);
-    forecast(data.longitude, data.latitude, (error, forecastData) => {
+    forecast(data, (error, { forecast, temperature, feelsLike } = {}) => {
       if (error) return console.log(error);
       console.log(data.location);
       console.log(
-        `${forecastData.forecast}. It is ${forecastData.temperature} degrees and it feels like ${forecastData.feelsLike} degrees`
+        `${forecast}. It is ${temperature} degrees and it feels like ${feelsLike} degrees`
       );
     });
   });

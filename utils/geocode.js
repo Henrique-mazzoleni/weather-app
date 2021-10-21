@@ -6,17 +6,17 @@ const geocode = (address, callback) => {
     address
   )}.json?access_token=${process.env.GEO_API_KEY}&limit=1`;
 
-  request({ url: url, json: true }, (error, response) => {
+  request({ url, json: true }, (error, { body }) => {
+    const { center, place_name: location } = body.features[0];
     if (error) {
       callback("Unable to connect to Geolocator service.", undefined);
-    } else if (response.body.features.length === 0) {
+    } else if (body.features.length === 0) {
       callback("Geolocator unable to find location", undefined);
     } else {
-      const search_result = response.body.features[0];
       callback(undefined, {
-        latitude: search_result.center[1],
-        longitude: search_result.center[0],
-        location: search_result.place_name,
+        latitude: center[1],
+        longitude: center[0],
+        location,
       });
     }
   });
